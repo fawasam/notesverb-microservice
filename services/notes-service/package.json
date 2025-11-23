@@ -4,6 +4,7 @@
   "description": "",
   "main": "jest.config.js",
   "scripts": {
+    "build": "tsc",
     "dev": "nodemon --exec \"npx ts-node --transpile-only src/index.ts\"",
     "test": "jest"
   },
