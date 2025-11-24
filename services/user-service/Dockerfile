@@ -13,7 +13,7 @@ COPY services/user-service ./services/user-service
 
 # Install dependencies and build
 WORKDIR /app/services/user-service
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npx prisma generate
 RUN npm run build
 

@@ -13,7 +13,7 @@ COPY services/tags-service ./services/tags-service
 
 # Install dependencies and build
 WORKDIR /app/services/tags-service
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npx prisma generate
 RUN npm run build
 

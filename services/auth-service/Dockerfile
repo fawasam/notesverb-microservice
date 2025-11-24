@@ -13,7 +13,7 @@ COPY services/auth-service ./services/auth-service
 
 # Install dependencies and build
 WORKDIR /app/services/auth-service
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npx prisma generate
 RUN npm run build
 

@@ -13,7 +13,7 @@ COPY services/notes-service ./services/notes-service
 
 # Install dependencies and build
 WORKDIR /app/services/notes-service
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npx prisma generate
 RUN npm run build
 

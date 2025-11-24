@@ -13,7 +13,7 @@ COPY api-gateway ./api-gateway
 
 # Install dependencies and build
 WORKDIR /app/api-gateway
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npm run build
 
 # Runner stage
