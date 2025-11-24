@@ -38,6 +38,7 @@ export function isPublicRoute(path: string): boolean {
 /**
  * JWT Authentication Middleware for API Gateway
  */
+
 export function gatewayAuth(req: Request, res: Response, next: NextFunction): void {
   // Skip authentication for public routes
   if (isPublicRoute(req.path)) {
