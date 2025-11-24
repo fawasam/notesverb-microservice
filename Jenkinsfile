@@ -54,7 +54,7 @@ pipeline {
     -f ${svc}/Dockerfile \
     -t ${image} \
     --push \
-    ${svc}
+    .
 """
 
           }
