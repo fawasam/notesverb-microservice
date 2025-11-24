@@ -80,9 +80,42 @@ Added `--legacy-peer-deps` flag to all `npm ci` commands in Dockerfiles
 
 ---
 
+### 4. ✅ TypeScript Compiler Not Found
+
+**Error:**
+```
+sh: tsc: not found
+npm error process "/bin/sh -c npm run build" did not complete successfully: exit code: 127
+```
+
+**Root Cause:** TypeScript and ts-node were missing from `devDependencies` in all service package.json files
+
+**Fix Applied:**
+Added TypeScript and ts-node to devDependencies in all package.json files:
+```json
+{
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
+```
+
+**Files Modified:**
+- `api-gateway/package.json`
+- `services/auth-service/package.json` (already had typescript, added ts-node)
+- `services/notes-service/package.json`
+- `services/user-service/package.json`
+- `services/tags-service/package.json`
+
+**Status:** ✅ RESOLVED
+
+---
+
 ## Summary of Changes
 
-### Modified Files (7 total)
+### Modified Files (12 total)
 
 1. **Jenkinsfile**
    - Changed Docker build to use root context with `-f` flag
@@ -91,21 +124,36 @@ Added `--legacy-peer-deps` flag to all `npm ci` commands in Dockerfiles
 2. **api-gateway/Dockerfile**
    - Added `--legacy-peer-deps` to `npm ci`
 
-3. **services/auth-service/Dockerfile**
+3. **api-gateway/package.json**
+   - Added TypeScript, ts-node, and @types/node to devDependencies
+
+4. **services/auth-service/Dockerfile**
    - Added `--legacy-peer-deps` to `npm ci`
 
-4. **services/notes-service/Dockerfile**
+5. **services/auth-service/package.json**
+   - Added ts-node to devDependencies (already had TypeScript)
+
+6. **services/notes-service/Dockerfile**
    - Added `--legacy-peer-deps` to `npm ci`
 
-5. **services/user-service/Dockerfile**
+7. **services/notes-service/package.json**
+   - Added TypeScript, ts-node, and @types/node to devDependencies
+
+8. **services/user-service/Dockerfile**
    - Added `--legacy-peer-deps` to `npm ci`
 
-6. **services/tags-service/Dockerfile**
-   - Added `--legacy-peer-deps` to `npm ci`
+9. **services/user-service/package.json**
+   - Added TypeScript, ts-node, and @types/node to devDependencies
 
-7. **Server Configuration**
-   - Jenkins user added to docker group
-   - Docker socket permissions updated
+10. **services/tags-service/Dockerfile**
+    - Added `--legacy-peer-deps` to `npm ci`
+
+11. **services/tags-service/package.json**
+    - Added TypeScript and ts-node to devDependencies
+
+12. **Server Configuration**
+    - Jenkins user added to docker group
+    - Docker socket permissions updated
 
 ---
 
@@ -114,8 +162,8 @@ Added `--legacy-peer-deps` flag to all `npm ci` commands in Dockerfiles
 ### 1. Commit Your Changes
 
 ```bash
-git add Jenkinsfile api-gateway/Dockerfile services/*/Dockerfile
-git commit -m "Fix Jenkins pipeline: Docker context and npm peer deps"
+git add Jenkinsfile api-gateway/Dockerfile services/*/Dockerfile api-gateway/package.json services/*/package.json
+git commit -m "Fix Jenkins pipeline: Docker context, npm peer deps, and TypeScript"
 git push
 ```
 
