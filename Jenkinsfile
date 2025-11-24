@@ -25,16 +25,17 @@ pipeline {
 
           // build & push for each service
           for (svc in SERVICES.split()) {
-            dir(svc) {
-              // compute image name (use folder name as image)
-              def svcName = svc.tokenize('/').last()
-              def image = "${DOCKER_REGISTRY_PREFIX}/${svcName}:${IMAGE_TAG}"
-              echo "Building ${svc} -> ${image}"
-              sh """
-                docker build -t ${image} .
-                docker push ${image}
-              """
-            }
+            // compute image name (use folder name as image)
+            def svcName = svc.tokenize('/').last()
+            def image = "${DOCKER_REGISTRY_PREFIX}/${svcName}:${IMAGE_TAG}"
+            echo "Building ${svc} -> ${image}"
+            
+            // Build from root directory with -f to specify Dockerfile location
+            // This allows Dockerfile to access both shared/ and service directories
+            sh """
+              docker build -f ${svc}/Dockerfile -t ${image} .
+              docker push ${image}
+            """
           }
         }
       }
