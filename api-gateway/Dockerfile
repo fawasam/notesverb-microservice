@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy shared module
 COPY shared ./shared
 WORKDIR /app/shared
-RUN npm ci --omit=dev
+RUN npm ci
 
 # Copy gateway
 WORKDIR /app
