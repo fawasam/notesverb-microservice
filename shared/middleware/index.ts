@@ -36,8 +36,10 @@ export function authenticateToken(
     }
 
     req.user = decoded as JWTPayload; // Attach user info to request
-    next();
+    return next();
   });
+  
+  return; // Explicitly return to satisfy TypeScript - the callback handles the response
 }
 
 export function asyncHandler(
@@ -56,7 +58,7 @@ export function validateRequest(schema: any) {
       const errors: Record<string, string[]> = {};
       error.details.forEach((detail: any) => {
         const field = detail.path.join(".");
-        if (!error[field]) {
+        if (!errors[field]) {
           errors[field] = [];
         }
         errors[field].push(detail.message);
@@ -69,7 +71,7 @@ export function validateRequest(schema: any) {
       });
     }
 
-    next();
+    return next();
   };
 }
 

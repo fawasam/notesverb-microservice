@@ -57,7 +57,7 @@ export const validateToken = asyncHandler(
 
     const payload = await authService.validateToken(token);
 
-    res.status(200).json(createSuccessResponse(payload, "Token is valid"));
+    return res.status(200).json(createSuccessResponse(payload, "Token is valid"));
   }
 );
 

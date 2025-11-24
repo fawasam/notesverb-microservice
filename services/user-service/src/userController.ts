@@ -14,7 +14,7 @@ export const getProfile = asyncHandler(async (req: Request, res: Response) => {
 
   const profile = await userService.getProfile(userId);
 
-  res
+ return res
     .status(200)
     .json(
       createSuccessResponse(profile, "User profile retrieved successfully")
@@ -33,7 +33,7 @@ export const updateProfile = asyncHandler(
 
     const profile = await userService.updateProfile(userId, req.body);
 
-    res
+   return res
       .status(200)
       .json(
         createSuccessResponse(profile, "User profile updated successfully")
@@ -53,6 +53,6 @@ export const deleteProfile = asyncHandler(
 
     await userService.deleteProfile(userId);
 
-    res.status(204).json(createSuccessResponse(null, "Profile deleted")); // No content response
+    return res.status(204).json(createSuccessResponse(null, "Profile deleted")); // No content response
   }
 );
