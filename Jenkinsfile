@@ -34,7 +34,8 @@ pipeline {
     stage('Build & Push Images') {
       steps {
         script {
-          IMAGE_TAG = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+          // IMAGE_TAG = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+          IMAGE_TAG = "latest"
           env.IMAGE_TAG = IMAGE_TAG
           echo "IMAGE_TAG = ${IMAGE_TAG}"
 
