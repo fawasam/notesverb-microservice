@@ -61,6 +61,7 @@ pipeline {
         sshagent(['gitops-ssh-key']) {
           script {
             sh """
+              export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
               rm -rf ${GITOPS_CLONE_DIR}
               git clone ${GITOPS_REPO} ${GITOPS_CLONE_DIR}
             """
@@ -100,7 +101,7 @@ pipeline {
       steps {
         sshagent(['gitops-ssh-key']) {
           script {
-            sh "rm -rf ${GITOPS_CLONE_DIR}; git clone ${GITOPS_REPO} ${GITOPS_CLONE_DIR}"
+            sh "export GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=no'; rm -rf ${GITOPS_CLONE_DIR}; git clone ${GITOPS_REPO} ${GITOPS_CLONE_DIR}"
             def target = (env.BRANCH_NAME == 'staging') ? 'staging' : 'prod'
             for (svc in SERVICES.split()) {
               def svcName = svc.tokenize('/').last()
