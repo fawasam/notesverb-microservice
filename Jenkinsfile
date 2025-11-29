@@ -31,37 +31,40 @@ pipeline {
     }
 
 
-    stage('Build & Push Images') {
-      steps {
-        script {
-          // IMAGE_TAG = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-          IMAGE_TAG = "latest"
-          env.IMAGE_TAG = IMAGE_TAG
-          echo "IMAGE_TAG = ${IMAGE_TAG}"
+stage('Build & Push Images') {
+  steps {
+    script {
 
-          // build & push for each service
-          for (svc in SERVICES.split()) {
-            // compute image name (use folder name as image)
-            def svcName = svc.tokenize('/').last()
-            def image = "${DOCKER_REGISTRY_PREFIX}/${svcName}:${IMAGE_TAG}"
-            echo "Building ${svc} -> ${image}"
-            
-            // Build from root directory with -f to specify Dockerfile location
-            // This allows Dockerfile to access both shared/ and service directories
-            sh """
+      IMAGE_TAG = "latest"
+      env.IMAGE_TAG = IMAGE_TAG
+      echo "IMAGE_TAG = ${IMAGE_TAG}"
 
-            docker buildx prune --all -f
+      // ENABLE BUILDX + QEMU
+      sh """
+        docker buildx create --name multi --use || true
+        docker run --privileged --rm tonistiigi/binfmt --install all
+        docker buildx inspect --bootstrap
+      """
 
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  --no-cache \
-  -f ${svc}/Dockerfile \
-  -t ${image} --push .
-            """
-          }
-        }
+      for (svc in SERVICES.split()) {
+        def svcName = svc.tokenize('/').last()
+        def image = "${DOCKER_REGISTRY_PREFIX}/${svcName}:${IMAGE_TAG}"
+
+        echo "Building ${svc} -> ${image}"
+
+        sh """
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --push \
+            --no-cache \
+            -f ${svc}/Dockerfile \
+            -t ${image} .
+        """
       }
     }
+  }
+}
+
 
     stage('Update GitOps Repo - Dev') {
       steps {
