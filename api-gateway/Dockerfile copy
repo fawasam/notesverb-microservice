@@ -1,29 +1,29 @@
+# Production-ready Dockerfile for api-gateway
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# --- SHARED dependency install ---
-COPY shared/package*.json ./shared/
-RUN cd shared && npm ci
-
-# now copy shared source
+# Copy shared module
 COPY shared ./shared
+WORKDIR /app/shared
+RUN npm ci
 
-
-# --- GATEWAY dependency install ---
-COPY api-gateway/package*.json ./api-gateway/
-RUN cd api-gateway && npm ci --legacy-peer-deps
-
-# now copy gateway source
+# Copy gateway
+WORKDIR /app
 COPY api-gateway ./api-gateway
 
-RUN cd api-gateway && npm run build
+# Install dependencies and build
+WORKDIR /app/api-gateway
+RUN npm ci --legacy-peer-deps
+RUN npm run build
 
-
+# Runner stage
 FROM node:18-alpine AS runner
 WORKDIR /app
 
+# Copy shared
 COPY --from=builder /app/shared ./shared
 
+# Copy built gateway
 COPY --from=builder /app/api-gateway/package*.json ./api-gateway/
 COPY --from=builder /app/api-gateway/dist ./api-gateway/dist
 COPY --from=builder /app/api-gateway/node_modules ./api-gateway/node_modules
