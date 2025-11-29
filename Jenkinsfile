@@ -49,7 +49,7 @@ pipeline {
             // Build from root directory with -f to specify Dockerfile location
             // This allows Dockerfile to access both shared/ and service directories
             sh """
-              docker buildx build -f ${svc}/Dockerfile -t ${image} --push .
+              docker buildx build --platform linux/amd64,linux/arm64 -f ${svc}/Dockerfile -t ${image} --push .
             """
           }
         }
