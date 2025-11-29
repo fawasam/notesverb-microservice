@@ -16,7 +16,10 @@ RUN cd api-gateway && npm ci --legacy-peer-deps
 # now copy gateway source
 COPY api-gateway ./api-gateway
 
-RUN cd api-gateway && npm run build
+# Build from api-gateway directory to ensure correct output structure
+WORKDIR /app/api-gateway
+RUN npm run build
+WORKDIR /app
 
 
 FROM node:18-alpine AS runner
@@ -30,4 +33,4 @@ COPY --from=builder /app/api-gateway/node_modules ./api-gateway/node_modules
 
 WORKDIR /app/api-gateway
 EXPOSE 3000
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/api-gateway/src/index.js"]

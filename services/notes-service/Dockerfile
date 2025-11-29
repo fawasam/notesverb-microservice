@@ -32,4 +32,4 @@ COPY --from=builder /app/services/notes-service/prisma ./services/notes-service/
 
 WORKDIR /app/services/notes-service
 EXPOSE 3003
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/services/notes-service/src/index.js"]

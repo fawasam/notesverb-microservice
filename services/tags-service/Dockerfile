@@ -32,4 +32,4 @@ COPY --from=builder /app/services/tags-service/prisma ./services/tags-service/pr
 
 WORKDIR /app/services/tags-service
 EXPOSE 3004
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/services/tags-service/src/index.js"]

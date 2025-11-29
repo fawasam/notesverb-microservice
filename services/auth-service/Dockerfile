@@ -32,4 +32,4 @@ COPY --from=builder /app/services/auth-service/prisma ./services/auth-service/pr
 
 WORKDIR /app/services/auth-service
 EXPOSE 3001
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/services/auth-service/src/index.js"]
